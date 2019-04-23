@@ -1,2 +1,0 @@
-# renderPixelByThree
-Created with CodeSandbox
