@@ -1,5 +1,12 @@
 
-var OBJLoader2Example = function(elementToBindTo) {
+
+const objpath = "../data/models/pixel17/cms2017pixel.obj";
+const mtlpath = "../data/models/pixel17/cms2017pixel.mtl";
+
+// const objpath = "../data/models/male02/male02.obj";
+// const mtlpath = "../data/models/male02/male02.mtl";
+
+var OBJLoader2Example = function (elementToBindTo) {
   this.renderer = null;
   this.canvas = elementToBindTo;
   this.aspectRatio = 1;
@@ -7,11 +14,12 @@ var OBJLoader2Example = function(elementToBindTo) {
 
   this.scene = null;
   this.cameraDefaults = {
-    posCamera: new THREE.Vector3(0.0, 175.0, 500.0),
-    posCameraTarget: new THREE.Vector3(0, 0, 0),
+    posCamera: new THREE.Vector3(0.0, 75.0, 100.0),
+    posCameraTarget: new THREE.Vector3(0, 20, 40),
     near: 0.1,
-    far: 10000,
-    fov: 45
+    far: 2000,
+    fov: 45,
+    zoom: 3,
   };
   this.camera = null;
   this.cameraTarget = this.cameraDefaults.posCameraTarget;
@@ -22,7 +30,7 @@ var OBJLoader2Example = function(elementToBindTo) {
 OBJLoader2Example.prototype = {
   constructor: OBJLoader2Example,
 
-  initGL: function() {
+  initGL: function () {
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
@@ -59,24 +67,26 @@ OBJLoader2Example.prototype = {
     this.scene.add(helper);
   },
 
-  initContent: function() {
-    var modelName = "female02";
+  initContent: function () {
+    var modelName = "pixel2017";
     this._reportProgress({ detail: { text: "Loading: " + modelName } });
 
     var scope = this;
     var objLoader = new THREE.OBJLoader2();
-    var callbackOnLoad = function(event) {
+    var callbackOnLoad = function (event) {
+      var pos = new THREE.Vector3(0., -580., 0.);
+      event.detail.loaderRootNode.position.copy(pos);
       scope.scene.add(event.detail.loaderRootNode);
       console.log("Loading complete: " + event.detail.modelName);
       scope._reportProgress({ detail: { text: "" } });
     };
 
-    var onLoadMtl = function(materials) {
+    var onLoadMtl = function (materials) {
       objLoader.setModelName(modelName);
       objLoader.setMaterials(materials);
       objLoader.setLogging(true, true);
       objLoader.load(
-        "../data/models/male02/male02.obj",
+        objpath,
         callbackOnLoad,
         null,
         null,
@@ -85,16 +95,16 @@ OBJLoader2Example.prototype = {
       );
     };
 
-    objLoader.loadMtl("../data/models/male02/male02.mtl", null, onLoadMtl);
+    objLoader.loadMtl(mtlpath, null, onLoadMtl);
   },
 
-  _reportProgress: function(event) {
+  _reportProgress: function (event) {
     var output = THREE.LoaderSupport.Validator.verifyInput(event.detail.text, "");
     console.log("Progress: " + output);
     document.getElementById("feedback").innerHTML = output;
   },
 
-  resizeDisplayGL: function() {
+  resizeDisplayGL: function () {
     this.controls.handleResize();
 
     this.recalcAspectRatio();
@@ -107,26 +117,26 @@ OBJLoader2Example.prototype = {
     this.updateCamera();
   },
 
-  recalcAspectRatio: function() {
+  recalcAspectRatio: function () {
     this.aspectRatio =
       this.canvas.offsetHeight === 0
         ? 1
         : this.canvas.offsetWidth / this.canvas.offsetHeight;
   },
 
-  resetCamera: function() {
+  resetCamera: function () {
     this.camera.position.copy(this.cameraDefaults.posCamera);
     this.cameraTarget.copy(this.cameraDefaults.posCameraTarget);
     this.camera.updateProjectionMatrix();
   },
 
-  updateCamera: function() {
+  updateCamera: function () {
     this.camera.aspect = this.aspectRatio;
     this.camera.lookAt(this.cameraTarget);
     this.camera.updateProjectionMatrix();
   },
 
-  render: function() {
+  render: function () {
     if (!this.renderer.autoClear) this.renderer.clear();
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
@@ -135,11 +145,11 @@ OBJLoader2Example.prototype = {
 
 var app = new OBJLoader2Example(document.getElementById("example"));
 
-var resizeWindow = function() {
+var resizeWindow = function () {
   app.resizeDisplayGL();
 };
 
-var render = function() {
+var render = function () {
   requestAnimationFrame(render);
   app.render();
 };
