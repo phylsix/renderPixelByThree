@@ -1,9 +1,3 @@
-import * as THREE from "three";
-import * as dat from "dat.gui";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
-import { LoaderSupport } from "./js/loaders/LoaderSupport";
-import { OBJLoader2 } from "./js/loaders/OBJLoader2";
 
 var OBJLoader2Example = function(elementToBindTo) {
   this.renderer = null;
@@ -45,7 +39,7 @@ OBJLoader2Example.prototype = {
       this.cameraDefaults.far
     );
     this.resetCamera();
-    this.controls = new TrackballControls(
+    this.controls = new THREE.TrackballControls(
       this.camera,
       this.renderer.domElement
     );
@@ -70,7 +64,7 @@ OBJLoader2Example.prototype = {
     this._reportProgress({ detail: { text: "Loading: " + modelName } });
 
     var scope = this;
-    var objLoader = new OBJLoader2();
+    var objLoader = new THREE.OBJLoader2();
     var callbackOnLoad = function(event) {
       scope.scene.add(event.detail.loaderRootNode);
       console.log("Loading complete: " + event.detail.modelName);
@@ -82,7 +76,7 @@ OBJLoader2Example.prototype = {
       objLoader.setMaterials(materials);
       objLoader.setLogging(true, true);
       objLoader.load(
-        "../data/models/female02/female02.obj",
+        "../data/models/male02/male02.obj",
         callbackOnLoad,
         null,
         null,
@@ -91,11 +85,11 @@ OBJLoader2Example.prototype = {
       );
     };
 
-    objLoader.loadMtl("../data/models/female02/female02.mtl", null, onLoadMtl);
+    objLoader.loadMtl("../data/models/male02/male02.mtl", null, onLoadMtl);
   },
 
   _reportProgress: function(event) {
-    var output = LoaderSupport.Validator.verifyInput(event.detail.text, "");
+    var output = THREE.LoaderSupport.Validator.verifyInput(event.detail.text, "");
     console.log("Progress: " + output);
     document.getElementById("feedback").innerHTML = output;
   },
