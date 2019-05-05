@@ -1,14 +1,15 @@
 {
-  "name": "parcel-sandbox",
+  "name": "my cms pixel",
   "version": "1.0.0",
-  "description": "Simple Parcel Sandbox",
+  "description": "3D pixel detector for CMS",
   "main": "index.html",
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "three": "0.103.0"
+    "dat.gui": "0.7.6",
+    "three": "0.104.0"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",
